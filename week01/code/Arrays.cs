@@ -38,5 +38,19 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+
+        //Reverse the entire list using the built-in Reverse() method
+        data.Reverse();
+
+        //Reverse the first slice
+        data.Reverse(0, amount);
+        
+        //Reverse the second slice
+        data.Reverse(amount, data.Count - amount);
+
+        //That way, the list is rotated to the right by the specified amount O(1) space complexity better than creating a new list
+
+
+
     }
 }
