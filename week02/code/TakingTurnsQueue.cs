@@ -40,9 +40,16 @@ public class TakingTurnsQueue
         else
         {
             Person person = _people.Dequeue();
-            if (person.Turns > 1)
+            if (person.Turns > 0)  //fixed logic to only decrement turns if greater than 0
             {
-                person.Turns -= 1;
+                person.Turns--;  //decrement turns only if they have finite turns
+                if (person.Turns > 0)
+                {
+                    _people.Enqueue(person);
+                }
+            }
+            else
+            {
                 _people.Enqueue(person);
             }
 
