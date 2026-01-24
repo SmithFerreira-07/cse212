@@ -59,6 +59,18 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            if (fields.Length >3) // ensure there are enough fields
+            {
+                string degree = fields[3].Trim(); //we now get the degree from the 4th column
+                if (degrees.TryGetValue(degree, out int currentCount)) //check if degree already exists in dictionary, used TryGetValue for efficiency over ContainsKey, this way we only do one lookup instead of two
+                {
+                    degrees[degree] = currentCount + 1;
+                }
+                else
+                {
+                    degrees.Add(degree, 1);
+                }
+            }
         }
 
         return degrees;
@@ -83,7 +95,33 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        //array to count occurrences of each letter, this fixed array represents 'a' to 'z'
+        //Index 0 = 'a', Index 1 = 'b', ..., Index 25 = 'z'
+        //the advantage of using a fixed array is that it uses less memory and is faster than a dictionary for this specific case, like we talked about in class
+        int[] letterCounts = new int[26];
+
+        void ProcessWord(string word, bool increment)
+        {
+            foreach (char c in word)
+            {
+                if (c == ' ') continue; //ignore spaces
+                int index = char.ToLower(c) - 'a'; //convert char to index
+                if (index >= 0 && index < 26) //ensure it's a letter
+                {
+                    if (increment) letterCounts[index]++; //increment for word1
+                    else letterCounts[index]--; //decrement for word2
+                }
+            }
+        }
+        ProcessWord(word1, true); //process first word, incrementing counts
+        ProcessWord(word2, false); //process second word, decrementing counts
+
+        foreach (int count in letterCounts)
+        {
+            if (count != 0) return false; //if any count is not zero, they are not anagrams
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -112,11 +150,18 @@ public static class SetsAndMaps
 
         var featureCollection = JsonSerializer.Deserialize<FeatureCollection>(json, options);
 
-        // TODO Problem 5:
-        // 1. Add code in FeatureCollection.cs to describe the JSON using classes and properties 
-        // on those classes so that the call to Deserialize above works properly.
-        // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
-        // 3. Return an array of these string descriptions.
-        return [];
+        //create list to hold results
+        List<string> results = new List<string>();
+        //iterate through features and extract place and magnitude
+        foreach (var feature in featureCollection.Features)
+        {
+            var mag = feature.Properties.Mag; //get magnitude
+            var place = feature.Properties.Place; //get place
+            if (mag.HasValue && !string.IsNullOrEmpty(place)) //check for valid data
+            {
+                results.Add($"{place} - Mag {mag.Value}"); //format and add to results
+            }
+        }
+        return results.ToArray(); //convert list to array and return
     }
 }
