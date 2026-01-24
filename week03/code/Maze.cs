@@ -32,7 +32,17 @@ public class Maze
     /// </summary>
     public void MoveLeft()
     {
-        // FILL IN CODE
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)) // get possible directions
+        {
+            if (directions[0]) // check if left is possible
+            {
+                _currX -= 1; // move left
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
     }
 
     /// <summary>
@@ -41,7 +51,17 @@ public class Maze
     /// </summary>
     public void MoveRight()
     {
-        // FILL IN CODE
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)) // get possible directions
+        {
+            if (directions[1]) // check if right is possible
+            {
+                _currX += 1; // move right
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
     }
 
     /// <summary>
@@ -50,7 +70,17 @@ public class Maze
     /// </summary>
     public void MoveUp()
     {
-        // FILL IN CODE
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)) // get possible directions
+        {
+            if (directions[2]) // check if up is possible
+            {
+                _currY -= 1; // move up
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
     }
 
     /// <summary>
@@ -59,7 +89,17 @@ public class Maze
     /// </summary>
     public void MoveDown()
     {
-        // FILL IN CODE
+        if (_mazeMap.TryGetValue((_currX, _currY), out bool[] directions)) // get possible directions
+        {
+            if (directions[3]) // check if down is possible
+            {
+                _currY += 1; // move down
+            }
+            else
+            {
+                throw new InvalidOperationException("Can't go that way!");
+            }
+        }
     }
 
     public string GetStatus()
