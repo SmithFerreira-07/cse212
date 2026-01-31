@@ -79,6 +79,14 @@ public class LinkedList : IEnumerable<int>
     public void RemoveTail()
     {
         // TODO Problem 2
+        if (_head == _tail)
+        {
+            RemoveHead(); //reuse RemoveHead to handle empty or single item list
+            return;
+        }
+        
+        _tail!.Prev!.Next = null; //first ! confirms _tail is not null, second ! confirms _tail.Prev is not null
+        _tail = _tail.Prev; //update tail to previous node
     }
 
     /// <summary>
@@ -123,6 +131,28 @@ public class LinkedList : IEnumerable<int>
     public void Remove(int value)
     {
         // TODO Problem 3
+        Node? curr = _head;
+        while (curr is not null)
+        {
+            if (curr.Data == value)
+            {
+                if (curr == _head)
+                {
+                    RemoveHead(); //reuse previous function
+                }
+                else if (curr == _tail)
+                {
+                    RemoveTail(); //reuse previously implemented solution
+                }
+                else
+                {
+                    //curr is in the middle
+                    curr.Prev!.Next = curr.Next;  //update previous node to skip curr
+                    curr.Next!.Prev = curr.Prev;  //update next node to skip curr
+                }
+                return;
+            }
+        }
     }
 
     /// <summary>
