@@ -152,6 +152,7 @@ public class LinkedList : IEnumerable<int>
                 }
                 return;
             }
+            curr = curr.Next; //forgot to advance to next node FIXED
         }
     }
 
@@ -161,6 +162,14 @@ public class LinkedList : IEnumerable<int>
     public void Replace(int oldValue, int newValue)
     {
         // TODO Problem 4
+        for (Node? curr = _head; curr is not null; curr = curr.Next) // I used for loop because it keeps the curr variable scoped to the loop, curr should not be used outside of this loop
+        {
+            if (curr.Data == oldValue)
+            {
+                curr.Data = newValue; //that way we don't have to create a new node, just change the data in the existing node, modifying the node in place
+            }
+            //curr = curr.Next; //moved to for loop increment section
+        }
     }
 
     /// <summary>
@@ -191,7 +200,12 @@ public class LinkedList : IEnumerable<int>
     public IEnumerable Reverse()
     {
         // TODO Problem 5
-        yield return 0; // replace this line with the correct yield return statement(s)
+        Node? curr = _tail;
+        while (curr is not null) //iterate until we reach the front
+        {
+            yield return curr.Data; // return the current value
+            curr = curr.Prev;      // move to previous
+        }
     }
 
     public override string ToString()
