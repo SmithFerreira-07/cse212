@@ -15,7 +15,11 @@ public static class Recursion
     public static int SumSquaresRecursive(int n)
     {
         // TODO Start Problem 1
-        return 0;
+        if (n <= 0) { //if n is 0 or negative, return 0
+            return 0;
+        }
+    
+        return n * n + SumSquaresRecursive(n - 1); //return n^2 + sum of squares up to n-1
     }
 
     /// <summary>
@@ -40,6 +44,16 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        if (word.Length == size) { //base case: if the current word has reached the desired size, add it to results
+            results.Add(word);
+            return;
+        }
+
+        for (int i = 0; i < letters.Length; i++)
+        {
+            string newLetters = letters.Remove(i, 1); //remove the letter at index i to avoid reusing it, "Remove" helps to create a new string without the chosen letter
+            PermutationsChoose(results, newLetters, size, word + letters[i]); //recursive call with the new set of letters and the current word appended with the chosen letter
+        }
     }
 
     /// <summary>
@@ -97,9 +111,15 @@ public static class Recursion
             return 4;
 
         // TODO Start Problem 3
+        remember ??= new Dictionary<int, decimal>(); //initialize the remember dictionary if it's null
+
+        if (remember.TryGetValue(s, out decimal storedWays)) { //check if the number of ways to climb s stairs is already stored in the remember dictionary
+            return storedWays; //if it is, return the stored value
+        }
 
         // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        decimal ways = CountWaysToClimb(s - 1, remember) + CountWaysToClimb(s - 2, remember) + CountWaysToClimb(s - 3, remember);
+        remember[s] = ways; //store the calculated number of ways in the remember dictionary
         return ways;
     }
 
