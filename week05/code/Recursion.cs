@@ -111,9 +111,9 @@ public static class Recursion
             return 4;
 
         // TODO Start Problem 3
-        remember ??= new Dictionary<int, decimal>(); //initialize the remember dictionary if it's null
+        remember ??= new Dictionary<int, decimal>(); //initialize the remember dictionary if it's null, this way is more efficient than creating a new dictionary every time the function is called
 
-        if (remember.TryGetValue(s, out decimal storedWays)) { //check if the number of ways to climb s stairs is already stored in the remember dictionary
+        if (remember.TryGetValue(s, out decimal storedWays)) { //check if the number of ways to climb s stairs is already stored in the remember dictionary, TryGetValue is more efficient than ContainsKey for this case
             return storedWays; //if it is, return the stored value
         }
 
@@ -139,6 +139,18 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        int index = pattern.IndexOf('*'); //find the index of the first wildcard in the pattern
+
+        if (index == -1) { //if there are no wildcards left in the pattern, add the pattern to results
+            results.Add(pattern);
+            return;
+        }
+
+        string prefix = pattern.Substring(0, index); //get the part of the pattern before the wildcard
+        string suffix = pattern.Substring(index + 1); //get the part of the pattern after the wildcard
+
+        WildcardBinary(prefix + '0' + suffix, results); //recursive call with the wildcard replaced by '0'
+        WildcardBinary(prefix + '1' + suffix, results); //recursive call with the wildcard replaced by '1'
     }
 
     /// <summary>
@@ -157,7 +169,28 @@ public static class Recursion
 
         // TODO Start Problem 5
         // ADD CODE HERE
+        currPath ??= new List<(int, int)>(); //initialize currPath if it's null
 
+        if (!maze.IsValidMove(currPath, x, y)) return; //guardrail
+
+        currPath.Add((x, y)); //add the current position to the path
+
+        if (maze.IsEnd(x,y)) //check if current position is the end of the maze
+        {
+            results.Add(currPath.AsString());
+        }
+        else //if it's not the end, continue exploring in all four directions
+        {
+            var directions = new[] { (1, 0), (-1, 0), (0, 1), (0, -1) }; //right, left, down, up
+
+            foreach (var (dx, dy) in directions) //iterate through each direction and make a recursive call to explore that direction
+            {
+                SolveMaze(results, maze, x + dx, y + dy, currPath); //recursive call with the new position and the current path
+            }
+        }
+
+        currPath.RemoveAt(currPath.Count - 1); //backtrack if we have explored all directions
         // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
+        //^ we already add the path to results when we find the end of the maze, so we don't need to add this part here.
     }
 }
